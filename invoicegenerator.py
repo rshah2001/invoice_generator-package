@@ -1,12 +1,14 @@
+import os
+
 import pandas as pd
 import glob
 from fpdf import FPDF
 from pathlib import Path
 
 
-def generate(invoices_path, pdfs_path):
+def generate(invoices_path, pdfs_path, company_logo, column1, column2, column3, column4, column5):
     # glob.glob will return all file paths that match a specific pattern
-    filepaths = glob.glob("invoices/*.xlsx")
+    filepaths = glob.glob(f"{invoices_path}/*.xlsx")
 
     for filepath in filepaths:
         # excels have multiple sheets in one document so having the sheet name is mandatory
@@ -39,11 +41,11 @@ def generate(invoices_path, pdfs_path):
         for index, row in df.iterrows():
             pdf.set_font(family="Times", size=10)
             pdf.set_text_color(80, 80, 80)
-            pdf.cell(w=30, h=8, txt=str(row["product_id"]), border=1)
-            pdf.cell(w=70, h=8, txt=str(row["product_name"]), border=1)
-            pdf.cell(w=30, h=8, txt=str(row["amount_purchased"]), border=1)
-            pdf.cell(w=30, h=8, txt=str(row["price_per_unit"]), border=1)
-            pdf.cell(w=30, h=8, txt=str(row["total_price"]), border=1, ln=1)
+            pdf.cell(w=30, h=8, txt=str(row[column1]), border=1)
+            pdf.cell(w=70, h=8, txt=str(row[column2]), border=1)
+            pdf.cell(w=30, h=8, txt=str(row[column3]), border=1)
+            pdf.cell(w=30, h=8, txt=str(row[column4]), border=1)
+            pdf.cell(w=30, h=8, txt=str(row[column5]), border=1, ln=1)
 
         total_sum = df["total_price"].sum()
         pdf.set_font(family="Times", size=10)
@@ -62,7 +64,8 @@ def generate(invoices_path, pdfs_path):
         # Add company name and logo
         pdf.set_font(family="Times", size=14, style="B")
         pdf.cell(w=30, h=8, txt=f"Rishil Shah")
-        pdf.image("rs.png", w=10)
+        pdf.image(company_logo, w=10)
 
         # Output file
-        pdf.output(f"PDFs/Invoice {invoice_nr}.pdf")
+        os.makedirs((pdfs_path))
+        pdf.output(f"{pdfs_path}/{filename}.pdf")
