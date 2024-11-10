@@ -6,7 +6,7 @@ from fpdf import FPDF
 from pathlib import Path
 
 
-def generate(invoices_path, pdfs_path, company_logo, column1, column2, column3, column4, column5):
+def generate(invoices_path, pdfs_path, company_logo, product_id, product_name, amount_purchased, price_per_unit, total):
     # glob.glob will return all file paths that match a specific pattern
     filepaths = glob.glob(f"{invoices_path}/*.xlsx")
 
@@ -41,11 +41,11 @@ def generate(invoices_path, pdfs_path, company_logo, column1, column2, column3, 
         for index, row in df.iterrows():
             pdf.set_font(family="Times", size=10)
             pdf.set_text_color(80, 80, 80)
-            pdf.cell(w=30, h=8, txt=str(row[column1]), border=1)
-            pdf.cell(w=70, h=8, txt=str(row[column2]), border=1)
-            pdf.cell(w=30, h=8, txt=str(row[column3]), border=1)
-            pdf.cell(w=30, h=8, txt=str(row[column4]), border=1)
-            pdf.cell(w=30, h=8, txt=str(row[column5]), border=1, ln=1)
+            pdf.cell(w=30, h=8, txt=str(row[product_id]), border=1)
+            pdf.cell(w=70, h=8, txt=str(row[product_name]), border=1)
+            pdf.cell(w=30, h=8, txt=str(row[amount_purchased]), border=1)
+            pdf.cell(w=30, h=8, txt=str(row[price_per_unit]), border=1)
+            pdf.cell(w=30, h=8, txt=str(row[total]), border=1, ln=1)
 
         total_sum = df["total_price"].sum()
         pdf.set_font(family="Times", size=10)
